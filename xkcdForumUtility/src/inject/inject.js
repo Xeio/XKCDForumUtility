@@ -22,7 +22,6 @@ function linksToJumps()
             if(document.getElementsByName(postName).length > 0 ||
                 document.getElementById(postName))
             {
-				console.log("Foo");
                 links[i].href = "#" + postName;
             }
         }
@@ -31,7 +30,7 @@ function linksToJumps()
 
 function addQuotingLinks(){
     var postId = window.location.href.match(/quote&f=\d*&p=(\d*)/i);
-	var reply = document.getElementsByName("message")[0];  //$('textarea[name="message"]');
+	var reply = document.getElementsByName("message")[0];
 	var poster = reply.value.match(/\[quote="(?!\[url=)(.*?)"\]/i);
 	if (postId[1] && poster[1]){
 		var newString = '[quote="[url=http://forums.xkcd.com/viewtopic.php?p=' + postId[1] + '#p' + postId[1] + ']' + poster[1] + '[/url]"]';
