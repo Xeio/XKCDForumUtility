@@ -1,12 +1,12 @@
 chrome.extension.sendMessage({}, function(response) {
 	var readyStateCheckInterval = setInterval(function() {
-	if (document.readyState === "complete") {
-		clearInterval(readyStateCheckInterval);
+        if (document.readyState === "complete") {
+            clearInterval(readyStateCheckInterval);
 
-		linksToJumps();
-		addQuotingLinks();
-		createQuoteOverrideScript();
-	}
+            linksToJumps();
+            addQuotingLinks();
+            createQuoteOverrideScript();
+        }
 	}, 10);
 });
 
@@ -31,11 +31,16 @@ function linksToJumps()
 function addQuotingLinks(){
     var postId = window.location.href.match(/quote&f=\d*&p=(\d*)/i);
 	var reply = document.getElementsByName("message")[0];
-	var poster = reply.value.match(/\[quote="(?!\[url=)(.*?)"\]/i);
-	if (postId[1] && poster[1]){
-		var newString = '[quote="[url=http://forums.xkcd.com/viewtopic.php?p=' + postId[1] + '#p' + postId[1] + ']' + poster[1] + '[/url]"]';
-		reply.value = reply.value.replace(poster[0], newString);
-	}
+    if(reply)
+    {
+        var poster = reply.value.match(/\[quote="(?!\[url=)(.*?)"\]/i);
+        if (postId[1] && poster[1])
+        {
+            var postLink = '[url=http://forums.xkcd.com/viewtopic.php?p=' + postId[1] + '#p' + postId[1] + ']↶[/url]';
+            var newString = '[quote="' + poster[1] + '"]' + postLink + '\n';
+            reply.value = reply.value.replace(poster[0], newString);
+        }
+    }
 }
 
 function createQuoteOverrideScript(){
@@ -69,16 +74,17 @@ function addquote(post_id, username, l_wrote)
 	}
 
 	// Get text selection - not only the post content :(
-	if (window.getSelection)
-	{
+	// IE9 must use the document.selection method but has the *.getSelection so we just force no IE
+	if (window.getSelection && !is_ie && !window.opera) 
+    {
 		theSelection = window.getSelection().toString();
-	}
-	else if (document.getSelection)
-	{
+	} 
+    else if (document.getSelection && !is_ie) 
+    {
 		theSelection = document.getSelection();
-	}
-	else if (document.selection)
-	{
+	} 
+    else if (document.selection) 
+    {
 		theSelection = document.selection.createRange().text;
 	}
 
@@ -111,7 +117,9 @@ function addquote(post_id, username, l_wrote)
 	{
 		if (bbcodeEnabled)
 		{
-			var newText = '[quote="[url=http://forums.xkcd.com/viewtopic.php?p=' + post_id + '#p' + post_id + ']' + username + '[/url]"]' + theSelection + '[/quote]';
+            var postLink = '[url=http://forums.xkcd.com/viewtopic.php?p=' + post_id + '#p' + post_id + ']↶[/url]';
+			var newText = '[quote="' + username + '"]' + postLink + '\n' + theSelection + '[/quote]';
+            
 			insert_text(newText);
 			
 			//insert_text('[quote="' + username + '"]' + theSelection + '[/quote]');
