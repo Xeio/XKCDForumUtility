@@ -1,6 +1,6 @@
 {
   "name": "XKCD Forum Utility",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "manifest_version": 2,
   "description": "Provides some improvements to the XKCD forums.",
   "permissions": [
